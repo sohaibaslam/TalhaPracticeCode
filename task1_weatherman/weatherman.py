@@ -1,4 +1,6 @@
 import zipfile
+import argparse
+import sys
 
 def extract_data(filename):
     with zipfile.ZipFile(filename, 'r') as z:
@@ -27,7 +29,8 @@ def max_temp(file_data):
             if current_temp > max_temp:
                 max_temp = current_temp
 
-    print(f'Maximum temperature is {max_temp}')
+    return max_temp
+
 def min_temp(file_data):
     min_temp = float('inf') 
     for entry in file_data:
@@ -38,9 +41,23 @@ def min_temp(file_data):
             if current_temp < min_temp:
                 min_temp = current_temp
                 
-    print(f'Minimum temperature is {min_temp}')
+    return min_temp
     
 filename = 'Murree_weather_2004_Aug.txt'
 file_data = read_data(filename)
-max_temp(file_data)
-min_temp(file_data)
+  
+def data(args):
+    
+    if args.e:
+       print(f"max temp is {max_temp(file_data)} \nmin temp is {min_temp(file_data)}") 
+               
+    
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--e', type=int, default=2002, help='Enter year for highest temp, lowest temp and humidity')
+    args = parser.parse_args()
+    sys.stdout.write(str(data(args)))
+    
+    
+    
+    
