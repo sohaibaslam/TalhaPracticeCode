@@ -1,63 +1,69 @@
-import zipfile
-import argparse
-import sys
-
-def extract_data(filename):
-    with zipfile.ZipFile(filename, 'r') as z:
-        z.extractall('weatherman')
-     
-def read_data(filename):
-    data = []
-    
-    with open(filename,'r') as f:
-        header = f.readline().strip().split(',')
-        for line in f:
-            values = line.strip().split(',')
-            entry = dict(zip(header, values))
-            data.append(entry)
-            
-    return data
+import os
+import csv
 
 
-def max_temp(file_data):
-    max_temp = float('-inf') 
-    for entry in file_data:
-        max_temp_entry = entry.get('Max TemperatureC', '')
-        
-        if max_temp_entry and max_temp_entry.isdigit():
-            current_temp = int(max_temp_entry)
-            if current_temp > max_temp:
-                max_temp = current_temp
 
+def get_files_by_year_month(folder_path, target_year, target_month):
+    file_name_with_year_month = []
+    all_items = os.listdir(folder_path)
+    for item in all_items:
+        if os.path.isfile(os.path.join(folder_path,item)):
+            if has_year_month_in_pkt(os.path.join(folder_path,item),target_year,target_month):
+                file_name_with_year_month.append(item)
+    return file_name_with_year_month
+
+
+def has_year_month_in_pkt(folder_path, target_year, target_month):
+    with open(folder_path, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            pkt_date_parts = row.get('PKT','').split('-')
+            if len(pkt_date_parts) == 3:
+                year, month, date = pkt_date_parts
+                if year == str(target_year) and month == str(target_month):
+                    return True
+    return False  
+
+def maximum_temperature(file_name):
+    file_path = os.path.join(os.getcwd(),file_name)
+    max_temp = float('-inf')
+    with open (file_path, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            max = row.get('Max TemperatureC', '')
+            if max and max.isdigit():
+                current_temp = int(max)
+                if current_temp > max_temp:
+                    max_temp = current_temp
+                    
     return max_temp
 
-def min_temp(file_data):
-    min_temp = float('inf') 
-    for entry in file_data:
-        min_temp_entry = entry.get('Min TemperatureC', '')
-        
-        if min_temp_entry and min_temp_entry.isdigit():
-            current_temp = int(min_temp_entry)
-            if current_temp < min_temp:
-                min_temp = current_temp
-                
+def minimum_temperature(file_name):
+    file_path = os.path.join(os.getcwd(),file_name)
+    min_temp = float('inf')
+    with open (file_path, 'r') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            min = row.get('Min TemperatureC', '')
+            if min and min.isdigit():
+                current_temp = int(min)
+                if current_temp < min_temp:
+                    min_temp = current_temp
+                    
     return min_temp
-    
-filename = 'Murree_weather_2004_Aug.txt'
-file_data = read_data(filename)
-  
-def data(args):
-    
-    if args.e:
-       print(f"max temp is {max_temp(file_data)} \nmin temp is {min_temp(file_data)}") 
-               
-    
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--e', type=int, default=2002, help='Enter year for highest temp, lowest temp and humidity')
-    args = parser.parse_args()
-    sys.stdout.write(str(data(args)))
-    
-    
-    
-    
+
+        
+folder_path = "weatherfiles"
+target_year = 2004   
+target_month = 8
+
+files_with_year_month = get_files_by_year_month(folder_path,target_year,target_month)
+
+
+for file_name in files_with_year_month:
+    max_temp = maximum_temperature(file_name)
+    print(f"Maximum temperature is {file_name} : {max_temp}")
+
+for file_name in files_with_year_month:
+    min_temp = minimum_temperature(file_name)
+    print(f"Minimum temperature is {file_name} : {min_temp}")
