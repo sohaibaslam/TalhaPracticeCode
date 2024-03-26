@@ -1,4 +1,6 @@
-from practice import Weathermachine
+
+from weatherman import Weathermachine
+from filehandling import FileReading
 import argparse
 import sys
 import os
@@ -10,8 +12,9 @@ target_year = 2006
 target_month = 8
 
 weather_machine = Weathermachine(folder_path)
+file_reading = FileReading(folder_path)
 
-files_with_year_month = weather_machine.get_files_by_year_month(target_year,target_month)
+files_with_year_month = file_reading.get_files_by_year_month(target_year,target_month)
 
 def year():
     for file_name in files_with_year_month:
