@@ -1,11 +1,7 @@
 
-
-
 class Weathermachine:
     
-    def __init__(self,folder_path):
-        self.folder_path = folder_path
-        
+           
     def get_maximum_temperature(self,data):
         max_temp_values = data['Max TemperatureC']
         max_temp_values = [int(temp) for temp in max_temp_values if temp]

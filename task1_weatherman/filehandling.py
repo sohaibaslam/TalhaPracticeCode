@@ -1,10 +1,7 @@
 import os
 import csv
 
-
-
-
-class FileReading:
+class FileReader:
     
     def __init__(self,folder_path):
         self.folder_path = folder_path
@@ -45,11 +42,3 @@ class FileReading:
                     data[key].append(values)
                     
         return data
-
-
-
-                
-            
-    
-    
-    
