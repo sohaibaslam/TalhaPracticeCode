@@ -3,7 +3,6 @@ from weatherman import Weathermachine
 from filehandling import FileReading
 import argparse
 import sys
-import os
 
 
 
@@ -16,18 +15,25 @@ file_reading = FileReading(folder_path)
 
 files_with_year_month = file_reading.get_files_by_year_month(target_year,target_month)
 
-def year():
-    for file_name in files_with_year_month:
-        max_temp = weather_machine.maximum_temperature(file_name)
-        print(f"Maximum temperature for {file_name} is {max_temp}")
+for file in files_with_year_month:
+    data = file_reading.get_file_data(file)
+    
 
-    for file_name in files_with_year_month:
-        min_temp = weather_machine.minimum_temperature(file_name)
-        print(f"Minimum temperature for {file_name} is {min_temp}")
+def year():
+    for file in files_with_year_month:
+        data = file_reading.get_file_data(file)
+        max_temp = weather_machine.get_maximum_temperature(data)
+        print(f"Maximum temperature for {file} is {max_temp}")    
+       
+    for file in files_with_year_month:
+        data = file_reading.get_file_data(file)
+        min_temp = weather_machine.get_minimum_temperature(data)
+        print(f"Minimum temperature for {file} is {min_temp}")
         
-    for file_name in files_with_year_month:
-        humidity_percentage = weather_machine.humidity(file_name)
-        print(f"humidity for {file_name} is {humidity_percentage: .2f}%")
+    for file in files_with_year_month:
+        data = file_reading.get_file_data(file)
+        max_humidity = weather_machine.get_humidity(data)
+        print(f"Maximum Humidity for {file} is {max_humidity}")
 
 def data(args):
     

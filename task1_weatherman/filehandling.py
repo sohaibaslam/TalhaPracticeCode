@@ -1,7 +1,6 @@
 import os
 import csv
-import argparse
-import sys
+
 
 
 
@@ -9,7 +8,7 @@ class FileReading:
     
     def __init__(self,folder_path):
         self.folder_path = folder_path
-    
+
         
     def get_files_by_year_month(self, target_year, target_month):
         file_name_with_year_month = []
@@ -32,3 +31,25 @@ class FileReading:
                         return True
         
             return False
+
+    def get_file_data (self,file_name):
+        file_path = os.path.join(self.folder_path,file_name)
+        data = {}
+        
+        with open (file_path,'r') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                for key,values in row.items():
+                    if key not in data:
+                        data[key] = []
+                    data[key].append(values)
+                    
+        return data
+
+
+
+                
+            
+    
+    
+    
