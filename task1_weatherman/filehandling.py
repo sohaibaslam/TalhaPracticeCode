@@ -31,14 +31,18 @@ class FileReader:
 
     def get_file_data (self,file_name):
         file_path = os.path.join(self.folder_path,file_name)
-        data = {}
-        
+        data = {}        
         with open (file_path,'r') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 for key,values in row.items():
                     if key not in data:
                         data[key] = []
+                    try:
+                        values = int(values)
+                    except ValueError:
+                        pass
+                            
                     data[key].append(values)
                     
         return data
